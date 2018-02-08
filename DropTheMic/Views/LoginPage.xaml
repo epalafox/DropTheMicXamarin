@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    xmlns:local="clr-namespace:DropTheMic" 
+    x:Class="DropTheMic.LoginPage">
+	<Grid 
+        BackgroundColor="#D5D5D5"
+        Padding="40, 10, 40, 10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ContentView Grid.Row="0" >
+            <Label 
+                TextColor="#717171"
+                XAlign="Center"
+                YAlign="Center">
+                Drop the Mic
+            </Label>
+        </ContentView>
+        <StackLayout Grid.Row="1">
+            <Entry x:Name="etUser"
+                BackgroundColor="#E5E5E5"
+                />
+            <Entry x:Name="etPassword"
+                BackgroundColor="#E5E5E5" />
+        </StackLayout>
+        <StackLayout Grid.Row="2">
+            <Button x:Name="btnLogin"
+                Text="Log In"
+                BackgroundColor="#31708F"
+                TextColor="#E5E5E5"/>
+            <Button x:Name="btnRegister"
+                Text="Sign Up"
+                BackgroundColor="#A94442"
+                TextColor="#E5E5E5"/>
+        </StackLayout>
+    </Grid>
+</ContentPage>
