@@ -23,6 +23,7 @@ namespace DropTheMic.Views
 				{
 					Application.Current.Properties["WebToken"] = auth.WebToken;
 					Application.Current.Properties["IdUser"] = auth.IdUser;
+					Application.Current.Properties["UserName"] = auth.UserName;
 					MessagingCenter.Send(this, "UserSigned");
 					Navigation.PushAsync(new MainPage());
 					Navigation.RemovePage(this);

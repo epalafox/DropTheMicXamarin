@@ -29,6 +29,7 @@ namespace DropTheMic.Views
 		{
 			Models.API.APIClient.WebToken = "";
 			Application.Current.Properties.Remove("WebToken");
+			Application.Current.Properties.Remove("UserName");
 			Application.Current.Properties.Remove("IdUser");
 			Navigation.InsertPageBefore(new LoginPage(), this);
 			Navigation.PopAsync();
