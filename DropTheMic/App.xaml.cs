@@ -1,4 +1,6 @@
 ﻿using Xamarin.Forms;
+using DropTheMic.Views;
+using DropTheMic.Models.API;
 
 namespace DropTheMic
 {
@@ -7,8 +9,15 @@ namespace DropTheMic
         public App()
         {
             InitializeComponent();
-
-            MainPage = new DropTheMicPage();
+			if (Current.Properties.ContainsKey("WebToken") && Current.Properties["WebToken"].ToString() != "")
+			{
+				APIClient.WebToken = Current.Properties["WebToken"].ToString();
+				MainPage = new NavigationPage(new MainPage());
+			}
+			else
+			{
+				MainPage = new NavigationPage(new LoginPage());
+			}
         }
 
         protected override void OnStart()

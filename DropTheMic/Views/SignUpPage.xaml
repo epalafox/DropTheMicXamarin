@@ -1,5 +1,141 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="DropTheMic.Views.SignUpPage">
-	<ContentPage.Content>
-	</ContentPage.Content>
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage 
+	xmlns="http://xamarin.com/schemas/2014/forms" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+	x:Class="DropTheMic.Views.SignUpPage"
+	xmlns:viewModels="clr-namespace:DropTheMic.ViewModels"
+	xmlns:fontAwesome="clr-namespace:DropTheMic.Common.Views.Shared.FontAwesome"
+	xmlns:icons="clr-namespace:FontAwesomeUnicode;assembly:DropTheMic"
+	NavigationPage.HasNavigationBar="false">
+	<ContentPage.BindingContext>
+		<viewModels:UserViewModel />
+	</ContentPage.BindingContext>
+
+	<AbsoluteLayout HorizontalOptions="FillAndExpand" 
+		VerticalOptions="FillAndExpand">
+		<Grid 
+			AbsoluteLayout.LayoutFlags="All"
+			AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+	        BackgroundColor="#D5D5D5"
+	        Padding="40, 10, 40, 10">
+	        <Grid.RowDefinitions>
+	            <RowDefinition Height="2*" />
+	            <RowDefinition Height="auto" />
+	            <RowDefinition Height="auto" />
+	            <RowDefinition Height="*" />
+	        </Grid.RowDefinitions>
+	        <Grid.ColumnDefinitions>
+	            <ColumnDefinition Width="*" />
+	        </Grid.ColumnDefinitions>
+	        <ContentView Grid.Row="0" >
+	            <AbsoluteLayout>
+				<Frame
+					AbsoluteLayout.LayoutFlags="PositionProportional"
+					AbsoluteLayout.LayoutBounds="0.5, 0.5, 200, 200"
+					CornerRadius="40"
+					BackgroundColor="#F5F5F5"
+					>
+					<StackLayout>
+						<AbsoluteLayout>
+							<Frame
+								CornerRadius="65"
+								AbsoluteLayout.LayoutFlags="PositionProportional"
+								AbsoluteLayout.LayoutBounds="0.5, 0.5, 130, 130"
+								HasShadow="false"
+								BackgroundColor="#717171"
+								>
+								<AbsoluteLayout>
+									<Frame
+										CornerRadius="60"
+										AbsoluteLayout.LayoutFlags="PositionProportional"
+										AbsoluteLayout.LayoutBounds="0.5, 0.5, 120, 120"
+										HasShadow="false"
+										BackgroundColor="#F5F5F5"
+										>
+										<fontAwesome:FontAwesome
+											FontSize="80"
+											Text=""
+										    TextColor="#717171"
+											HorizontalTextAlignment="Center"
+											VerticalTextAlignment="Center"/>
+									</Frame>
+								</AbsoluteLayout>
+							</Frame>
+						</AbsoluteLayout>
+			            <Label
+							FontSize="18"
+							Text="Drop The Mic"
+			                TextColor="#717171"
+							FontAttributes="Bold"
+			                HorizontalTextAlignment="Center" />
+					</StackLayout>
+					</Frame>
+				</AbsoluteLayout>
+	        </ContentView>
+	        <StackLayout Grid.Row="1">
+	            <Entry x:Name="etUser"
+	                BackgroundColor="#F5F5F5"
+	                FontSize="25"
+	                HorizontalTextAlignment="Center"
+					HeightRequest="50"
+	                Placeholder="User Name"
+	                PlaceholderColor="#B7B7B7"
+	                Text="{Binding UserName, Mode=TwoWay}"
+	                />
+	            <Entry x:Name="etPassword"
+	                BackgroundColor="#F5F5F5"
+	                FontSize="25"
+	                HorizontalTextAlignment="Center"
+					HeightRequest="50"
+	                Placeholder="Password"
+	                PlaceholderColor="#B7B7B7"
+					IsPassword="true"
+					Text="{Binding Password, Mode=TwoWay}"
+	                />
+				<DatePicker 
+					Date="{Binding BirthDay, Mode=TwoWay}"
+					Format="dd/MM/yyyy"
+					>
+				</DatePicker>
+				<Picker Title="Select a Gender"
+					SelectedItem="{Binding Gender}">
+					<Picker.ItemsSource>
+						<x:Array Type="{x:Type x:String}">
+							<x:String>Male</x:String>
+							<x:String>Female</x:String>
+							<x:String>Undefined</x:String>
+						</x:Array>
+					</Picker.ItemsSource>
+				</Picker>
+	        </StackLayout>
+	        <StackLayout Grid.Row="2">
+	            <Button x:Name="btnRegister"
+	                Text="Sign Up"
+	                BackgroundColor="#A94442"
+	                TextColor="#E5E5E5"
+					Command="{Binding SignUpCommand}"/>
+	            <Button x:Name="btnLogin"
+	                Text="Return"
+	                BackgroundColor="#31708F"
+	                TextColor="#E5E5E5"
+					Clicked="Handle_Clicked"
+	                />
+	        </StackLayout>
+	    </Grid>
+		<AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+			IsVisible="{Binding IsBusy}"
+			BackgroundColor="#75ffffff"
+			AbsoluteLayout.LayoutFlags="All"
+			AbsoluteLayout.LayoutBounds="0, 0, 1, 1">
+			<Frame IsVisible="{Binding IsBusy}" Padding="20, 20"
+				AbsoluteLayout.LayoutFlags="PositionProportional"
+				AbsoluteLayout.LayoutBounds="0.5,0.5, 100, 100"
+				BackgroundColor="#000000"
+				HasShadow="false"
+				CornerRadius="20"
+				>
+				<ActivityIndicator IsRunning="{Binding IsBusy}" Color="#E5E5E5"/>
+			</Frame>
+        </AbsoluteLayout>
+	</AbsoluteLayout>
 </ContentPage>

@@ -1,40 +1,50 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-namespace DropTheMic.Models
+
+namespace DropTheMic.Models.API
 {
-    public class Authorization
-    {
-        public string UserName { get; set; }
-        public string Password { get; set; }
+	public class Authorization : APICall
+	{
+		public string UserName { get; set; }
+		public string Password { get; set; }
 		public string WebToken { get; set; }
 		public int IdUser { get; set; }
-		public int result { get; set; }
 
-
-        const string route = "Authorization";
-
-        private Authorization()
-        {
-        }
 		public static Task<Authorization> Validate(string userName, string password)
-        {
-            return APIClient.Instance().GetAsync(route).ContinueWith(((response) =>{
+		{
+			if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+				return Task.Run(() =>
+				{
+					Authorization authorization = new Authorization()
+					{
+						UserName = userName,
+						Password = password,
+						statusCode = 400
+					};
+					return authorization;
+				});
+			Route = "Authorization";
+			Dictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters.Add("UserName", userName);
+			parameters.Add("Password", password);
+			return GetAsync(parameters).ContinueWith(((response) =>
+			{
 				Authorization authorization = new Authorization()
 				{
 					UserName = userName,
 					Password = password,
-					result = (int)response.Result.StatusCode
+					statusCode = (int)response.Result.StatusCode
 				};
-				if(authorization.result == (int)System.Net.HttpStatusCode.OK)
+				if (authorization.StatusCode == (int)System.Net.HttpStatusCode.OK)
 				{
-					authorization.WebToken = JsonConvert.DeserializeObject<Authorization>(response.Result.Content.ToString()).WebToken;
-					authorization.IdUser = JsonConvert.DeserializeObject<Authorization>(response.Result.Content.ToString()).IdUser;
+					authorization.WebToken = JsonConvert.DeserializeObject<Authorization>(response.Result.Content.ReadAsStringAsync().Result).WebToken;
+					authorization.IdUser = JsonConvert.DeserializeObject<Authorization>(response.Result.Content.ReadAsStringAsync().Result).IdUser;
 
 				}
 
 				return authorization;
-            }));
-        }
-    }
+			}));
+		}
+	}
 }

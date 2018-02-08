@@ -103,18 +103,30 @@ namespace DropTheMic.ViewModels
 					IsBusy = true;
 					User user = new User()
 					{
-						Birthday = birthDay,
+						Birthday = birthDay.ToString("dd/MM/yyyy"),
 						Gender = gender,
 						Password = password,
 						UserName = userName
 					};
 					User.Create(user).ContinueWith((result) =>
 					{
-						if(result.IsCompleted)
+						if(result.Result.StatusCode == 200)
 						{
 							Authorization.Validate(user.UserName, user.Password).ContinueWith((auth) =>{
 								IsBusy = false;
-								MessagingCenter.Send(this, "Signed", auth.Result);
+								if (auth.Result.StatusCode == 200)
+								{
+									APIClient.WebToken = auth.Result.WebToken;
+									MessagingCenter.Send(this, "Signed", auth.Result);
+								}
+								else
+								{
+									MessagingCenter.Send(this, "ShowSignUpAlert", new MessageModel()
+									{
+										Title = "Unexpected Error",
+										Message = "There was an unexpected error please check your connection"
+									});
+								}
 							});
 
 						}

@@ -1,7 +1,10 @@
-﻿namespace FontAwesomeUnicode
+﻿namespace DropTheMic.Common.Views.Shared.FontAwesome
 {
-	public static class FontAwesomeSolidIcon
+	public static class FontAwesomeIcon
 	{
-		public static readonly string microphone = "\uf130";
+		public static string microphone { get; } = "";
+		public static string plus { get; } = "";
+		public static string comment { get; }= "";
+		public static string edit { get; } = "";
 	}
 }
