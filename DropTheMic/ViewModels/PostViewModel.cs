@@ -1,7 +1,13 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using DropTheMic.Models.API;
+using Xamarin.Forms;
+
 namespace DropTheMic.ViewModels
 {
-	public class PostViewModel
+	public class PostViewModel : INotifyPropertyChanged
 	{
 		int id;
 		string post;
@@ -9,6 +15,10 @@ namespace DropTheMic.ViewModels
 		string hour;
 		int comments;
 		string user;
+		ObservableCollection<CommentViewModel> commentList;
+		bool isBusy;
+		bool isCommenting;
+		string newComment;
 		public int Id
 		{
 			get{
@@ -18,6 +28,7 @@ namespace DropTheMic.ViewModels
 				if(id != value)
 				{
 					id = value;
+					OnPropertyChanged();
 				}
 			}
 		}
@@ -30,6 +41,7 @@ namespace DropTheMic.ViewModels
 				if(post != value)
 				{
 					post = value;
+					OnPropertyChanged();
 				}
 			}
 		}
@@ -42,6 +54,7 @@ namespace DropTheMic.ViewModels
 				if(date != value)
 				{
 					date = value;
+					OnPropertyChanged();
 				}
 			}
 		}
@@ -54,6 +67,7 @@ namespace DropTheMic.ViewModels
 				if(hour != value)
 				{
 					hour = value;
+					OnPropertyChanged();
 				}
 			}
 		}
@@ -66,6 +80,7 @@ namespace DropTheMic.ViewModels
 				if(comments != value)
 				{
 					comments = value;
+					OnPropertyChanged();
 				}
 			}
 		}
@@ -77,11 +92,91 @@ namespace DropTheMic.ViewModels
 				if(user != value)
 				{
 					user = value;
+					OnPropertyChanged();
 				}
+			}
+		}
+		public ObservableCollection<CommentViewModel> CommentList{
+			get{
+				return commentList;
+			}
+			set{
+				if(commentList != value){
+					commentList = value;
+					OnPropertyChanged();
+				}
+			}
+		}
+		public bool IsCommenting{
+			get{
+				return isCommenting;
+			}
+			set{
+				if(isCommenting != value){
+					isCommenting = value;
+					OnPropertyChanged();
+				}
+			}
+		}
+		public string NewComment{
+			get{
+				return newComment;
+			}
+			set{
+				if(newComment != value){
+					newComment = value;
+					OnPropertyChanged();
+				}
+			}
+		}
+		public bool IsBusy{
+			get{
+				return isBusy;
+			}
+			set{
+				if(isBusy != value){
+					isBusy = value;
+					OnPropertyChanged();
+				}
+			}
+		}
+		public Command Comment
+		{
+			get
+			{
+				return new Command(() =>
+				{
+					CommentModel newCommentModel = new CommentModel()
+					{
+						Comment = NewComment
+					};
+					IsBusy = true;
+					CommentModel.Create(Id, newCommentModel).ContinueWith((result) => {
+						IsBusy = false;
+						NewComment = "";
+						IsCommenting = false;
+					});
+				});
+			}
+		}
+		public Command CancelComment
+		{
+			get
+			{
+				return new Command(() =>
+				{
+					IsCommenting = false;
+					NewComment = "";
+				});
 			}
 		}
 		public PostViewModel()
 		{
+		}
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }

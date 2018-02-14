@@ -1,38 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-	x:Class="DropTheMic.Views.MainPage"
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+	x:Class="DropTheMic.Views.PostPage"
 	xmlns:fontAwesome="clr-namespace:DropTheMic.Common.Views.Shared.FontAwesome"
-	Title="Posts">
-	<ContentPage.ToolbarItems>
-		<ToolbarItem Text="Log Out"
-			Order="Primary"
-			Activated="Handle_LogOut" />
-	</ContentPage.ToolbarItems>
+	Title="Post">
 	<ContentPage.Content>
-		<AbsoluteLayout HorizontalOptions="FillAndExpand" 
+		<AbsoluteLayout
+			HorizontalOptions="FillAndExpand" 
 			VerticalOptions="FillAndExpand"
 			BackgroundColor="#A5A5A5">
 			<Grid
 				AbsoluteLayout.LayoutFlags="All"
 				AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
-				BackgroundColor="#D5D5D5">
+				BackgroundColor="#D5D5D5"
+				RowSpacing="0">
 		        <Grid.RowDefinitions>
+		            <RowDefinition Height="auto" />
 		            <RowDefinition Height="*" />
 		            <RowDefinition Height="auto" />
 		        </Grid.RowDefinitions>
 		        <Grid.ColumnDefinitions>
 		            <ColumnDefinition Width="*" />
 		        </Grid.ColumnDefinitions>
-				<ListView x:Name="lvPost"
-					BackgroundColor="#E5E5E5"
+				<Frame
 					HorizontalOptions="FillAndExpand"
-					VerticalOptions="FillAndExpand"
+					BackgroundColor="#F5F5F5"
+					CornerRadius="0">
+					<StackLayout>
+						<StackLayout>
+							<StackLayout 
+								Orientation="Horizontal"
+								HorizontalOptions="End">
+								<Label 
+									TextColor="#151515"
+									Text="{Binding Date}" />
+								<Label Text="{Binding Hour}" />
+							</StackLayout>
+							<Label 
+								TextColor="#151515"
+								Text="{Binding Post}"
+								FontSize="18"
+								FontAttributes="Bold"/>
+							<Grid>
+						        <Grid.ColumnDefinitions>
+						            <ColumnDefinition Width="*" />
+						            <ColumnDefinition Width="auto" />
+						        </Grid.ColumnDefinitions>
+								<Label 
+									TextColor="#C5C5C5"
+									FontSize="10"
+									Text="{Binding User}"
+									HorizontalTextAlignment="Start"
+									FontAttributes="Italic"/>
+								<StackLayout
+									Orientation="Horizontal"
+									HorizontalOptions="End">
+									<fontAwesome:FontAwesome
+										FontSize="10"
+										Text=""
+									    TextColor="#151515"
+										HorizontalTextAlignment="End"/>
+									<Label 
+										TextColor="#151515"
+										FontSize="10"
+										HorizontalTextAlignment="End"
+										Text="{Binding Comments}" />
+								</StackLayout>
+							</Grid>
+						</StackLayout>
+					</StackLayout>
+				</Frame>
+				<ListView x:Name="lvComments"
+					Grid.Row="1"
+					BackgroundColor="#CDCDCD"
+					ItemsSource="{Binding CommentList}"
 					HasUnevenRows="true"
-					IsPullToRefreshEnabled="true"
-					RefreshCommand="{Binding RefreshCommand}"
-					IsRefreshing="{Binding IsRefreshing}"
-					Margin="0"
 					SeparatorVisibility="None">
 					<ListView.ItemTemplate>
 						<DataTemplate>
@@ -58,7 +100,7 @@
 											</StackLayout>
 											<Label 
 												TextColor="#151515"
-												Text="{Binding Post}"
+												Text="{Binding Comment}"
 												FontSize="18"
 												FontAttributes="Bold"/>
 											<Grid>
@@ -94,59 +136,42 @@
 						</DataTemplate>
 					</ListView.ItemTemplate>
 				</ListView>
-				<Frame
-					Grid.Row="1"
-					HorizontalOptions="FillAndExpand"
+				<Frame x:Name="fNewComment" 
 					BackgroundColor="#D5D5D5"
 					Padding="5"
-					CornerRadius="0"
-					x:Name="fNewPost">
+					Grid.Row="2"
+					CornerRadius="0"> 
 				        <fontAwesome:FontAwesome 
 				          FontSize="30" 
 				          Text="" 
 				          TextColor="#31708F" 
 				          HorizontalTextAlignment="Center" 
 				          VerticalTextAlignment="Center" /> 
-				</Frame>
+				</Frame> 
 			</Grid>
 			<AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-					IsVisible="{Binding IsBusy}"
+					IsVisible="{Binding IsCommenting}"
 					BackgroundColor="#75ffffff"
 					AbsoluteLayout.LayoutFlags="All"
 					AbsoluteLayout.LayoutBounds="0, 0, 1, 1">
-					<Frame IsVisible="{Binding IsBusy}" Padding="20, 20"
-						AbsoluteLayout.LayoutFlags="PositionProportional"
-						AbsoluteLayout.LayoutBounds="0.5,0.5, 100, 100"
-						BackgroundColor="#000000"
-						HasShadow="false"
-						CornerRadius="20"
-						>
-						<ActivityIndicator IsRunning="{Binding IsBusy}" Color="#E5E5E5"/>
-					</Frame>
-		        </AbsoluteLayout>
-				<AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-					IsVisible="{Binding IsPosting}"
-					BackgroundColor="#75ffffff"
-					AbsoluteLayout.LayoutFlags="All"
-					AbsoluteLayout.LayoutBounds="0, 0, 1, 1">
-					<Frame IsVisible="{Binding IsPosting}" Padding="20, 20"
+					<Frame IsVisible="{Binding IsCommenting}" Padding="20, 20"
 						AbsoluteLayout.LayoutFlags="All"
 						AbsoluteLayout.LayoutBounds="0.5,0.5, 0.7, 0.3"
 						BackgroundColor="#FFFFFF"
 						CornerRadius="20"
 						>
 						<StackLayout>
-							<Label HorizontalTextAlignment="Center" TextColor="#31708F">New Post</Label>
+							<Label HorizontalTextAlignment="Center" TextColor="#31708F">New Comment</Label>
 							<Entry 
-								Text="{Binding NewPost}"
+								Text="{Binding NewComment}"
 							/>
 							<Button 
-								Text="Post"
-								Command="{Binding Post}"
+								Text="Comment"
+								Command="{Binding Comment}"
 							/>
 							<Button 
 								Text="Cancel"
-								Command="{Binding CancelPost}"
+								Command="{Binding CancelComment}"
 							/>
 						</StackLayout>
 					</Frame>

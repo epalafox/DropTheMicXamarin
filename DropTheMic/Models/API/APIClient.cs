@@ -37,8 +37,8 @@ namespace DropTheMic.Models.API
 					Timeout = TimeSpan.FromMinutes(2)
 				};
 				httpAuthorizedClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				httpAuthorizedClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(WebToken);
 			}
+			httpAuthorizedClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(WebToken);
 			return httpAuthorizedClient;
 		}
     }

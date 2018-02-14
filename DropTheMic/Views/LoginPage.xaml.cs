@@ -1,6 +1,8 @@
 ﻿using Xamarin.Forms;
 using DropTheMic.Models;
 using DropTheMic.ViewModels;
+using DropTheMic.Models.API;
+
 namespace DropTheMic.Views
 {
     public partial class LoginPage : ContentPage
@@ -20,6 +22,7 @@ namespace DropTheMic.Views
 					Application.Current.Properties["WebToken"] = auth.WebToken;
 					Application.Current.Properties["IdUser"] = auth.IdUser;
 					Application.Current.Properties["UserName"] = auth.UserName;
+					APIClient.WebToken = auth.WebToken;
 					Navigation.PushAsync(new MainPage());
 					Navigation.RemovePage(this);
 				});

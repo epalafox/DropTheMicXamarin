@@ -4,6 +4,7 @@ using DropTheMic.ViewModels;
 using DropTheMic.Models;
 
 using Xamarin.Forms;
+using DropTheMic.Models.API;
 
 namespace DropTheMic.Views
 {
@@ -24,6 +25,7 @@ namespace DropTheMic.Views
 					Application.Current.Properties["WebToken"] = auth.WebToken;
 					Application.Current.Properties["IdUser"] = auth.IdUser;
 					Application.Current.Properties["UserName"] = auth.UserName;
+					APIClient.WebToken = auth.WebToken;
 					MessagingCenter.Send(this, "UserSigned");
 					Navigation.PushAsync(new MainPage());
 					Navigation.RemovePage(this);

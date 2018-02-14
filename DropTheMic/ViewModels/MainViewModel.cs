@@ -12,6 +12,7 @@ namespace DropTheMic.ViewModels
 	{
 		bool isBusy;
 		bool isPosting;
+		bool isRefreshing;
 		string newPost;
 		ObservableCollection<PostViewModel> posts;
 		public ObservableCollection<PostViewModel> Posts 
@@ -59,9 +60,21 @@ namespace DropTheMic.ViewModels
 				return newPost;
 			}
 			set{
-				if(NewPost != value)
+				if(newPost != value)
 				{
 					newPost = value;
+					OnPropertyChanged();
+				}
+			}
+		}
+		public bool IsRefreshing{
+			get{
+				return isRefreshing;
+			}
+			set{
+				if(isRefreshing != value)
+				{
+					isRefreshing = value;
 					OnPropertyChanged();
 				}
 			}
@@ -80,55 +93,23 @@ namespace DropTheMic.ViewModels
 					User = ""
 				}
 			};
-			IsBusy = true;
-			PostModel.GetPosts().ContinueWith((result) => 
-			{
-				Posts = new ObservableCollection<PostViewModel>(result.Result.Select(x => new PostViewModel()
-				{
-					Comments = x.Comments.Count(),
-					Date = x.Date,
-					Hour = x.Hour,
-					Id = x.Id,
-					Post = x.Post,
-					User = x.User.UserName
-				}).ToList());
-				IsBusy = false;
-				MessagingCenter.Send(this, "PostsLoaded", Posts);
-			});
+
+			LoadPosts();
 		}
 		public Command Post{
 			get{
 				return new Command(() =>
 				{
-					IsBusy = true;
 					PostModel newPostModel = new PostModel()
 					{
-						User = new User()
-						{
-							UserName = Application.Current.Properties["UserName"].ToString(),
-							IdUser = int.Parse(Application.Current.Properties["IdUser"].ToString()),
-							Gender = 1,
-							Birthday = "2018-01-01"
-						},
 						Post = NewPost
 					};
+					IsBusy = true;
 					PostModel.Create(newPostModel).ContinueWith((result) => {
-						PostModel.GetPosts().ContinueWith((posts) =>
-						{
-							Posts = new ObservableCollection<PostViewModel>(posts.Result.Select(x => new PostViewModel()
-							{
-								Comments = x.Comments.Count(),
-								Date = x.Date,
-								Hour = x.Hour,
-								Id = x.Id,
-								Post = x.Post,
-								User = x.User.UserName
-							}).ToList());
-							IsBusy = false;
-							IsPosting = false;
-							NewPost = "";
-							MessagingCenter.Send(this, "PostsLoaded", Posts);
-						});
+						IsBusy = false;
+						LoadPosts();
+						NewPost = "";
+						IsPosting = false;
 					});
 				});
 			}
@@ -144,6 +125,41 @@ namespace DropTheMic.ViewModels
 				});
 			}
 		}
+		public Command RefreshCommand
+		{
+			get{
+				return new Command(() =>
+				{
+					IsRefreshing = false;
+					LoadPosts();
+				});
+			}
+		}
+		private void LoadPosts(){
+			IsBusy = true;
+			PostModel.GetPosts().ContinueWith((postList) =>
+			{
+				Posts = new ObservableCollection<PostViewModel>(postList.Result.Select(x => new PostViewModel()
+				{
+					Comments = x.Comments.Count(),
+					CommentList = new ObservableCollection<CommentViewModel>(x.Comments.Select(y => new CommentViewModel(){
+						Comments = y.Comments.Count(),
+						Date = y.Date,
+						Hour = y.Hour,
+						Id = y.Id,
+						User = y.User.UserName,
+						Comment = y.Comment
+					})),
+					Date = x.Date,
+					Hour = x.Hour,
+					Id = x.Id,
+					Post = x.Post,
+					User = x.User.UserName
+				}).ToList());
+				IsBusy = false;
+				MessagingCenter.Send(this, "PostsLoaded", Posts);
+			});
+		}  
 		public event PropertyChangedEventHandler PropertyChanged;
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{

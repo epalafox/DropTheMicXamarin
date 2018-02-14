@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using DropTheMic.Models.API;
 using DropTheMic.ViewModels;
 
 using Xamarin.Forms;
@@ -20,23 +21,35 @@ namespace DropTheMic.Views
 					lvPost.ItemsSource = data;
 				});
 			});
-			TapGestureRecognizer cgr = new TapGestureRecognizer();
-			cgr.Tapped += Cgr_Tapped;
- 			alNewPost.GestureRecognizers.Add(cgr);
+			TapGestureRecognizer tapOnNew = new TapGestureRecognizer();
+			tapOnNew.Tapped += TapOnNew_Tapped;
+			fNewPost.GestureRecognizers.Add(tapOnNew);
+
+			//Handle the Item Selection
+			lvPost.ItemSelected += (sender, e) => {
+				((ListView)sender).SelectedItem = null;
+			};
+
+			lvPost.ItemTapped += LvPost_ItemTapped;
 		}
 
-		void Handle_Activated(object sender, System.EventArgs e)
+		void Handle_LogOut(object sender, System.EventArgs e)
 		{
-			Models.API.APIClient.WebToken = "";
+			APIClient.WebToken = "";
 			Application.Current.Properties.Remove("WebToken");
 			Application.Current.Properties.Remove("UserName");
 			Application.Current.Properties.Remove("IdUser");
 			Navigation.InsertPageBefore(new LoginPage(), this);
 			Navigation.PopAsync();
 		}
-		void Cgr_Tapped(object sender, EventArgs e)
+		void TapOnNew_Tapped(object sender, EventArgs e)
 		{
 			((MainViewModel)BindingContext).IsPosting = true;
+		}
+
+		void LvPost_ItemTapped(object sender, ItemTappedEventArgs e)
+		{
+			Navigation.PushAsync(new PostPage((PostViewModel)e.Item));
 		}
 	}
 }
