@@ -10,7 +10,7 @@ Simple Project that help people to learn how to develop their own Xamarin App wi
 ![New Post](https://firebasestorage.googleapis.com/v0/b/frozen-core.appspot.com/o/Xamarin%2FIMG_4006.PNG?alt=media&token=cdad4525-041c-4887-baf0-0e496777b7aa)
 
 ![Post Detail](https://firebasestorage.googleapis.com/v0/b/frozen-core.appspot.com/o/Xamarin%2FIMG_4005.PNG?alt=media&token=c1aab026-7183-42cc-bf95-961feb071b74)
-![New Comment](https://firebasestorage.googleapis.com/v0/b/frozen-core.appspot.com/o/Xamarin%2FIMG_4005.PNG?alt=media&token=c1aab026-7183-42cc-bf95-961feb071b74)
+![New Comment](https://firebasestorage.googleapis.com/v0/b/frozen-core.appspot.com/o/Xamarin%2FIMG_4007.PNG?alt=media&token=a6f7fbb8-c354-472a-8c65-02be931892a5)
 
 ## Getting Started
 
